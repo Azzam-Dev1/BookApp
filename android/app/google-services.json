@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "63043475709",
+    "project_id": "bookapp-5fcb9",
+    "storage_bucket": "bookapp-5fcb9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:63043475709:android:83ca502e1b223e59d40694",
+        "android_client_info": {
+          "package_name": "com.example.login_signup_demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "63043475709-uvsa14pp3lt0j16rhq40t1a6pbb43f8h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.login_signup_demo",
+            "certificate_hash": "0ca054836aa23a63fb192166efd6285bc09ef879"
+          }
+        },
+        {
+          "client_id": "63043475709-n86held11042sv8f29cjug9r3irlsesd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB33lk4_v5PqK7zvNXYgDjByq8oZU2Ejj0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "63043475709-gk46vt78qcefmn673kou884brv7lh225.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "63043475709-a1ei4ksf6g65bdverf882mv38s2n8f2u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.loginSignupDemo"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
