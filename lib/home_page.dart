@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'profile_page.dart';
+import 'package:login_signup_demo/profile_page.dart';
 import 'book_details_page.dart';
 import 'shared/widgets/book_cart.dart';
 import 'all_books_page.dart'; // Import the new page
@@ -10,12 +10,14 @@ class BookEntity {
   final String imagePath;
   final String title;
   final String subtitle;
+  final String genre; // Add genre field
   final double rating;
 
   BookEntity({
     required this.imagePath,
     required this.title,
     required this.subtitle,
+    required this.genre,
     required this.rating,
   });
 }
@@ -36,6 +38,8 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _searchController = TextEditingController();
   List<BookEntity> booklist = [];
   List<BookEntity> searchResults = [];
+  String selectedGenre = 'All';
+  double selectedRating = 0.0;
 
   @override
   void initState() {
@@ -62,6 +66,7 @@ class _HomePageState extends State<HomePage> {
             imagePath: data['imagePath'],
             title: data['title'],
             subtitle: data['subtitle'],
+            genre: data['genre'], // Fetch genre
             rating: averageRating,
           );
         }).toList();
@@ -78,6 +83,15 @@ class _HomePageState extends State<HomePage> {
         return book.title
             .toLowerCase()
             .contains(_searchController.text.toLowerCase());
+      }).toList();
+    });
+  }
+
+  void _filterBooks() {
+    setState(() {
+      searchResults = booklist.where((book) {
+        return (selectedGenre == 'All' || book.genre == selectedGenre) &&
+               (book.rating >= selectedRating);
       }).toList();
     });
   }
@@ -181,16 +195,70 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('New & Trending', style: TextStyle(fontSize: 18)),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AllBooksPage(booklist: booklist),
-                        ),
-                      );
-                    },
-                    child: Text('View All'),
+                  Row(
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AllBooksPage(booklist: booklist),
+                            ),
+                          );
+                        },
+                        child: Text('View All'),
+                      ),
+                      PopupMenuButton<String>(
+                        onSelected: (value) {
+                          setState(() {
+                            if (value == 'All') {
+                              selectedGenre = 'All';
+                            } else if (value == '4 and above') {
+                              selectedRating = 4.0;
+                            } else if (value == '3 and above') {
+                              selectedRating = 3.0;
+                            } else {
+                              selectedGenre = value;
+                              selectedRating = 0.0;
+                            }
+                            _filterBooks();
+                          });
+                        },
+                        itemBuilder: (BuildContext context) {
+                          return [
+                            PopupMenuItem(
+                              value: 'All',
+                              child: Text('All Genres'),
+                            ),
+                            PopupMenuItem(
+                              value: 'Action',
+                              child: Text('Action'),
+                            ),
+                            PopupMenuItem(
+                              value: 'Fairytale',
+                              child: Text('Fairytale'),
+                            ),
+                            PopupMenuItem(
+                              value: 'Mystery',
+                              child: Text('Mystery'),
+                            ),
+                            PopupMenuItem(
+                              value: 'Love, emotions',
+                              child: Text('Love, emotions'),
+                            ),
+                            PopupMenuItem(
+                              value: '4 and above',
+                              child: Text('Rating: 4 and above'),
+                            ),
+                            PopupMenuItem(
+                              value: '3 and above',
+                              child: Text('Rating: 3 and above'),
+                            ),
+                          ];
+                        },
+                        icon: Icon(Icons.filter_list),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -267,9 +335,9 @@ class _HomePageState extends State<HomePage> {
               ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: booklist.length,
+                itemCount: searchResults.length,
                 itemBuilder: (context, index) {
-                  final book = booklist[index];
+                  final book = searchResults[index];
                   return BookCard(
                     imagePath: book.imagePath,
                     title: book.title,
